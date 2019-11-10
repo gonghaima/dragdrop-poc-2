@@ -59,7 +59,6 @@ export class List extends React.Component {
         }
     }
     render() {
-        debugger
         var listItems = this.state.colors.map((item, i) => {
             return (
                 <li
