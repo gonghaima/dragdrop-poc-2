@@ -1,24 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { List } from './List'
 
 function App() {
+  const [colors, setColors] = useState([
+    {
+      newIndex: 1,
+      color: "red"
+    },
+
+    {
+      newIndex: 2,
+      color: "green"
+    },
+
+    {
+      newIndex: 3,
+      color: "blue"
+    },
+
+    {
+      newIndex: 4,
+      color: "yellow"
+    },
+
+    {
+      newIndex: 5,
+      color: "orange"
+    },
+
+    {
+      newIndex: 6,
+      color: "black"
+    }
+  ]);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <List colors={colors} />
     </div>
   );
 }
