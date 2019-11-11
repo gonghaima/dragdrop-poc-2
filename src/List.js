@@ -1,27 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-export class List extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { ...props };
+export const List = ({ allColors }) => {
+
+    let [colors, setColors] = useState(allColors);
+    const [dragged, setDragged] = useState(null);
+    let [over, setOver] = useState(null);
+
+    const dragStart = (e) => {
+        setDragged(e.currentTarget)
     }
 
-    dragStart(e) {
-        this.dragged = e.currentTarget;
-    }
-    dragEnd(e) {
-        this.dragged.style.display = 'block';
+    const dragEnd = (e) => {
+        dragged.style.display = 'block';
+        setDragged(dragged)
+
 
         e.target.classList.remove("drag-up");
-        this.over.classList.remove("drag-up");
+        over.classList.remove("drag-up");
 
         e.target.classList.remove("drag-down");
-        this.over.classList.remove("drag-down");
+        over.classList.remove("drag-down");
 
-
-        var colors = this.state.colors;
-        var from = Number(this.dragged.dataset.id);
-        var to = Number(this.over.dataset.id);
+        var from = Number(dragged.dataset.id);
+        var to = Number(over.dataset.id);
         colors.splice(to, 0, colors.splice(from, 1)[0]);
 
         //set newIndex to judge direction of drag and drop
@@ -30,13 +31,13 @@ export class List extends React.Component {
             return doc;
         })
 
-        this.setState({ colors: colors });
+        setColors(colors)
     }
 
-    dragOver(e) {
+    const dragOver = (e) => {
         e.preventDefault();
 
-        this.dragged.style.display = "none";
+        dragged.style.display = "none";
 
         if (e.target.tagName !== "LI") {
             return;
@@ -44,38 +45,37 @@ export class List extends React.Component {
 
         //判断当前拖拽target 和 经过的target 的 newIndex
 
-        const dgIndex = JSON.parse(this.dragged.dataset.item).newIndex;
+        const dgIndex = JSON.parse(dragged.dataset.item).newIndex;
         const taIndex = JSON.parse(e.target.dataset.item).newIndex;
         const animateName = dgIndex > taIndex ? "drag-up" : "drag-down";
 
 
-        if (this.over && e.target.dataset.item !== this.over.dataset.item) {
-            this.over.classList.remove("drag-up", "drag-down");
+        if (over && e.target.dataset.item !== over.dataset.item) {
+            over.classList.remove("drag-up", "drag-down");
         }
 
         if (!e.target.classList.contains(animateName)) {
             e.target.classList.add(animateName);
-            this.over = e.target;
+            over = e.target;
         }
     }
-    render() {
-        var listItems = this.state.colors.map((item, i) => {
-            return (
-                <li
-                    data-id={i}
-                    key={i}
-                    style={{ height: "60px", border: "solid 1px #cccccc", margin: "10px 30%", borderRadius: "5px", backgroundColor: "green", color: "#ffffff" }}
-                    draggable='true'
-                    onDragEnd={this.dragEnd.bind(this)}
-                    onDragStart={this.dragStart.bind(this)}
-                    data-item={JSON.stringify(item)}
-                >{item.color}</li>
-            )
-        });
-        return (
-            <ul onDragOver={this.dragOver.bind(this)} className="contain">
-                {listItems}
-            </ul>
-        )
-    }
+
+    return (
+        <ul onDragOver={(e) => dragOver(e)} className="contain">
+            {colors.map((item, i) => {
+                return (
+                    <li
+                        data-id={i}
+                        key={i}
+                        style={{ height: "60px", border: "solid 1px #cccccc", margin: "10px 30%", borderRadius: "5px", backgroundColor: "green", color: "#ffffff" }}
+                        draggable='true'
+                        onDragEnd={e => dragEnd(e)}
+                        onDragStart={e => dragStart(e)}
+                        data-item={JSON.stringify(item)}
+                    >{item.color}</li>
+                )
+            })}
+        </ul>
+    )
+
 }

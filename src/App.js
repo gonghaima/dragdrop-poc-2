@@ -4,7 +4,7 @@ import './App.css';
 import { List } from './List'
 
 function App() {
-  const [colors, setColors] = useState([
+  const [allColors, setColors] = useState([
     {
       newIndex: 1,
       color: "red"
@@ -37,7 +37,7 @@ function App() {
   ]);
   return (
     <div className="App">
-      <List colors={colors} />
+      <List allColors={allColors} />
     </div>
   );
 }
